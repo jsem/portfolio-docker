@@ -1,0 +1,21 @@
+version: "3.9"
+services:
+    
+    post-db:
+        image: postgres:13
+        ports:
+            - "5433:5432"
+        volumes:
+            - post-db-data:/var/lib/postgresql/data
+        networks:
+            - post-service
+        environment:
+            - POSTGRES_DB=${POST_DB_NAME}
+            - POSTGRES_USER=${POST_DB_USER}
+            - POSTGRES_PASSWORD=${POST_DB_PASSWORD}
+        
+networks:
+    post-service:
+
+volumes:
+    post-db-data:
