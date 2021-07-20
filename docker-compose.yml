@@ -53,4 +53,4 @@ services:
             - POSTGRES_PASSWORD=${POST_DB_PASSWORD}
 
 networks:
-    - post-service
+    post-service
