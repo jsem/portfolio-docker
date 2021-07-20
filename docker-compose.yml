@@ -1,21 +1,56 @@
 version: "3.9"
 services:
+
+    traefik:
+        image: traefik:2.1
+        restart: always
+        ports:
+          - '80:80'
+          - '443:443'
+        networks:
+            - post-service
+        volumes:
+            - ./traefik:/etc/traefik
+            - /var/run/docker.sock:/var/run/docker.sock:ro
+
+    jsemple-dev:
+        image: jsem/jsemple-dev:latest
+        networks:
+            - post-service
+        depends_on:
+            - traefik
+            - post-backend
+        labels:
+            - 'traefik.enable=true'
+            - 'traefik.http.routers.jsemple-dev.rule=Host(`www.jsemple.dev,jsemple.dev`)'
+            - 'traefik.http.routers.jsemple-dev.tls=true'
+            - 'traefik.http.routers.jsemple-dev.tls.certresolver=lets-encrypt'
+
+    post-backend:
+        image: jsem/portfolio-post-service:latest
+        networks:
+            - post-service
+        volumes:
+            - ./.env.post-backend:/app/.env
+        depends_on:
+            - traefik
+            - post-db
+        labels:
+            - 'traefik.enable=true'
+            - 'traefik.http.routers.post-backend.rule=PathPrefix(`/graphql`)'
+            - 'traefik.http.routers.post-backend.tls=true'
+            - 'traefik.http.routers.post-backend.tls.certresolver=lets-encrypt'
     
     post-db:
         image: postgres:13
-        ports:
-            - "5433:5432"
         volumes:
-            - post-db-data:/var/lib/postgresql/data
+            - /root/postgresql/data:/var/lib/postgresql/data
         networks:
             - post-service
         environment:
             - POSTGRES_DB=${POST_DB_NAME}
             - POSTGRES_USER=${POST_DB_USER}
             - POSTGRES_PASSWORD=${POST_DB_PASSWORD}
-        
-networks:
-    post-service:
 
-volumes:
-    post-db-data:
+networks:
+    - post-service
