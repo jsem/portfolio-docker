@@ -19,13 +19,11 @@ services:
             - post-service
         depends_on:
             - traefik
-            - post-backend
         labels:
             - 'traefik.enable=true'
             - 'traefik.http.routers.jsemple-dev.rule=Host(`www.jsemple.dev`,`jsemple.dev`)'
             - 'traefik.http.routers.jsemple-dev.tls=true'
             - 'traefik.http.routers.jsemple-dev.tls.certresolver=lets-encrypt'
-            - 'traefik.http.services.jsemple-dev.loadbalancer.server.port=80'
 
     post-backend:
         image: jsem/portfolio-post-service:latest
@@ -41,7 +39,6 @@ services:
             - 'traefik.http.routers.post-backend.rule=PathPrefix(`/graphql`)'
             - 'traefik.http.routers.post-backend.tls=true'
             - 'traefik.http.routers.post-backend.tls.certresolver=lets-encrypt'
-            - 'traefik.http.services.post-backend.loadbalancer.server.port=4000'
     
     post-db:
         image: postgres:13
