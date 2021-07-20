@@ -52,5 +52,11 @@ services:
             - POSTGRES_USER=${POST_DB_USER}
             - POSTGRES_PASSWORD=${POST_DB_PASSWORD}
 
+    watchtower:
+        image: v2tec/watchtower
+        volumes:
+            - /var/run/docker.sock:/var/run/docker.sock
+        command: --interval 30
+
 networks:
-    post-service
+    post-service:
