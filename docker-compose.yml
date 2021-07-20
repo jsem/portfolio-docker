@@ -22,7 +22,7 @@ services:
             - post-backend
         labels:
             - 'traefik.enable=true'
-            - 'traefik.http.routers.jsemple-dev.rule=Host(`www.jsemple.dev,jsemple.dev`)'
+            - 'traefik.http.routers.jsemple-dev.rule=Host(`www.jsemple.dev`,`jsemple.dev`)'
             - 'traefik.http.routers.jsemple-dev.tls=true'
             - 'traefik.http.routers.jsemple-dev.tls.certresolver=lets-encrypt'
 
